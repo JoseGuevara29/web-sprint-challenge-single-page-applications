@@ -1,29 +1,36 @@
 import React from "react";
-import useFormPizza from "./useFormPizza";
-import validate from "./validateInfo";
 
-export default function Pizza({ submitForm }) {
-  const { handleChange, handleSubmit, values, errors } = useFormPizza(validate);
-  //   console.log(values);
+export default function Pizza(props) {
+  console.log(props);
+  const { values, submit, change, disabled, errors } = props;
+  const onSubmit = (evt) => {
+    evt.preventDefault();
+    submit();
+  };
+
+  const onChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    const valueToUse = type === "checkbox" ? checked : value;
+    change(name, valueToUse);
+  };
 
   return (
-    //   onSubmit={onSubmit}
-    // <h1>Test</h1>
-    <form className="form container" onSubmit={handleSubmit}>
+    <form className="form-container" onSubmit={onSubmit}>
       <div className="form-group submit"></div>
       <h3>Fill up this form to order the pizza. Thank you.</h3>
       <div className="errors">
         <div>{errors.name}</div>
+        <div>{errors.pizzaSize}</div>
       </div>
       <div className="name">
         <label>
           Name for the order
           <input
-            className="form-input"
-            value={values.name}
-            onChange={handleChange}
             name="name"
             type="text"
+            className="form-input"
+            value={values.name}
+            onChange={onChange}
           />
         </label>
       </div>
@@ -32,15 +39,15 @@ export default function Pizza({ submitForm }) {
           Pizza Size
           <select
             name="pizzaSize"
-            onChange={handleChange}
+            onChange={onChange}
             value={values.pizzaSize}
             className="form-input"
           >
             <option value="">- Select an option -</option>
-            <option value="sixInch">6 Inches</option>
-            <option value="eightInch">8 Inches</option>
-            <option value="twelveInch">12 Inches</option>
-            <option value="sixteenInch">16 Inches</option>
+            <option value="Small Six Inches">6 Inches</option>
+            <option value="Medium Eight Inches">8 Inches</option>
+            <option value="Large Twelve Inches">12 Inches</option>
+            <option value="Extra Larger Sixteen Inches">16 Inches</option>
           </select>
         </label>
       </div>
@@ -51,7 +58,7 @@ export default function Pizza({ submitForm }) {
           <input
             type="checkbox"
             name="peperoni"
-            onChange={handleChange}
+            onChange={onChange}
             checked={values.peperoni}
           />
         </label>
@@ -61,7 +68,7 @@ export default function Pizza({ submitForm }) {
           <input
             type="checkbox"
             name="ham"
-            onChange={handleChange}
+            onChange={onChange}
             checked={values.ham}
           />
         </label>
@@ -71,14 +78,23 @@ export default function Pizza({ submitForm }) {
           <input
             type="checkbox"
             name="pineapple"
-            onChange={handleChange}
+            onChange={onChange}
             checked={values.hineapple}
           />
         </label>
       </div>
-      <button className="form-input-btn" type="submit">
-        Send Order
-      </button>
+      <label>
+        Special instructions
+        <input
+          type="text"
+          name="instructions"
+          onChange={onChange}
+          checked={values.instructions}
+        />
+      </label>
+      <div className="submitButton">
+        <button disabled={disabled}>submit</button>
+      </div>
     </form>
   );
 }
